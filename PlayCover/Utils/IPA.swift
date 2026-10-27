@@ -17,7 +17,7 @@ public class IPA {
     public func allocateTempDir() throws {
         tmpDir = try FileManager.default.url(for: .itemReplacementDirectory,
                                              in: .userDomainMask,
-                                             appropriateFor: FileManager.default.temporaryDirectory,
+                                             appropriateFor: AppsVM.externalRoot,
                                              create: true)
     }
 

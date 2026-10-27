@@ -123,6 +123,11 @@ class Entitlements {
             sandboxProfile.append(contentsOf: PlayRules.buildRules(rules: rules.bypass ?? [], bundleID: bundleID))
         }
 
+        // Allow access to the external data root (for container folders symlinked there).
+        // Appended last so it takes precedence over the bypass deny-all rule.
+        sandboxProfile.append("(allow file* file-read* file-write* file-write-data file-read-metadata file-ioctl "
+                              + "(subpath \"\(AppsVM.externalRoot.path)\"))")
+
         base["com.apple.security.temporary-exception.sbpl"] = sandboxProfile
 
         return base

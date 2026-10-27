@@ -7,7 +7,10 @@ import Foundation
 
 class AppsVM: ObservableObject {
 
-    public static let appDirectory = PlayTools.playCoverContainer.appendingPathComponent("Applications")
+    // Large data (installed apps, install temp files) lives on the external drive
+    public static let externalRoot = URL(fileURLWithPath:
+        "/Volumes/Samsung SSD 990 EVO Plus/Library/Containers/PlayCover")
+    public static let appDirectory = externalRoot.appendingPathComponent("Applications")
 
     static let shared = AppsVM()
 
