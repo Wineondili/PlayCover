@@ -123,17 +123,23 @@ class Entitlements {
             sandboxProfile.append(contentsOf: PlayRules.buildRules(rules: rules.bypass ?? [], bundleID: bundleID))
         }
 
-        // Allow access to the external data directory (for container folders symlinked there),
-        // but not to the installed app bundles next to it.
-        // Appended last so it takes precedence over the bypass deny-all rule.
-        let dataPath = AppsVM.dataDirectory.path
-        sandboxProfile.append("(allow file-read-metadata (path-ancestors \"\(dataPath)\"))")
-        sandboxProfile.append("(allow file* file-read* file-write* file-write-data file-read-metadata file-ioctl "
-                              + "(subpath \"\(dataPath)\"))")
+        // Appended last so it takes precedence over the bypass deny-all rule
+        sandboxProfile.append(contentsOf: externalDataRules)
 
         base["com.apple.security.temporary-exception.sbpl"] = sandboxProfile
 
         return base
+    }
+
+    // Allow access to the external data directory (for container folders symlinked there),
+    // but not to the installed app bundles next to it.
+    private static var externalDataRules: [String] {
+        let dataPath = AppsVM.dataDirectory.path
+        return [
+            "(allow file-read-metadata (path-ancestors \"\(dataPath)\"))",
+            "(allow file* file-read* file-write* file-write-data file-read-metadata file-ioctl "
+                + "(subpath \"\(dataPath)\"))"
+        ]
     }
 
     private static func copyEntitlements(exec: URL) throws -> String {
