@@ -11,6 +11,8 @@ class AppsVM: ObservableObject {
     public static let externalRoot = URL(fileURLWithPath:
         "/Volumes/Samsung SSD 990 EVO Plus/Library/Containers/PlayCover")
     public static let appDirectory = externalRoot.appendingPathComponent("Applications")
+    // Target for container folders symlinked out of ~/Library/Containers/<bundleId>/Data
+    public static let dataDirectory = externalRoot.appendingPathComponent("Data")
 
     static let shared = AppsVM()
 
