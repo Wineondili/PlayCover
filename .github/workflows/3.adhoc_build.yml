@@ -1,0 +1,42 @@
+name: Ad-hoc Build
+
+on:
+  # Build on every push to develop, or manually from the Actions tab
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Install build tools
+        run: brew install carthage swiftlint || true
+
+      - name: Build (ad-hoc signed)
+        run: |
+          xcodebuild -project PlayCover.xcodeproj \
+            -scheme PlayCover \
+            -configuration Release \
+            -destination "generic/platform=macOS" \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="-" \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM="" \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            build
+
+      - name: Package
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent \
+            build/Build/Products/Release/PlayCover.app PlayCover.zip
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PlayCover-adhoc
+          path: PlayCover.zip
