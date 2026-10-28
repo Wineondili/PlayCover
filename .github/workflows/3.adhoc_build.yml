@@ -1,9 +1,10 @@
 name: Ad-hoc Build
 
 on:
-  # Build on every push to develop, or manually from the Actions tab
+  # Build on pushes to develop, on PRs, or manually from the Actions tab
   push:
     branches: [develop]
+  pull_request:
   workflow_dispatch:
 
 jobs:
