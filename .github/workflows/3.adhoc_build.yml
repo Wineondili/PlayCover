@@ -25,7 +25,7 @@ jobs:
             -scheme PlayCover \
             -configuration Release \
             -destination "generic/platform=macOS" \
-            -derivedDataPath build \
+            -derivedDataPath "$RUNNER_TEMP/build" \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGN_STYLE=Manual \
             DEVELOPMENT_TEAM="" \
@@ -35,7 +35,7 @@ jobs:
       - name: Package
         run: |
           ditto -c -k --sequesterRsrc --keepParent \
-            build/Build/Products/Release/PlayCover.app PlayCover.zip
+            "$RUNNER_TEMP/build/Build/Products/Release/PlayCover.app" PlayCover.zip
 
       - uses: actions/upload-artifact@v4
         with:
