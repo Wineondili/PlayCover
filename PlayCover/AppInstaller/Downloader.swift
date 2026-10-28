@@ -105,7 +105,7 @@ class DownloadApp {
         do {
             tmpDir = try FileManager.default.url(for: .itemReplacementDirectory,
                                                  in: .userDomainMask,
-                                                 appropriateFor: URL(fileURLWithPath: "/Users"),
+                                                 appropriateFor: AppsVM.externalRoot,
                                                  create: true)
 
             if let tmpDir = tmpDir {

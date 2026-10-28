@@ -7,7 +7,21 @@ import Foundation
 
 class AppsVM: ObservableObject {
 
-    public static let appDirectory = PlayTools.playCoverContainer.appendingPathComponent("Applications")
+    // Large data (installed apps, install temp files) lives on the external drive
+    public static let externalVolume = URL(fileURLWithPath: "/Volumes/Samsung SSD 990 EVO Plus")
+    public static let externalRoot = externalVolume
+        .appendingPathComponent("Library")
+        .appendingPathComponent("Containers")
+        .appendingPathComponent("PlayCover")
+    public static let appDirectory = externalRoot.appendingPathComponent("Applications")
+    // Target for container folders symlinked out of ~/Library/Containers/<bundleId>/Data
+    public static let dataDirectory = externalRoot.appendingPathComponent("Data")
+
+    // True only when externalRoot exists on the external volume itself (not a stub on the boot disk)
+    static var isExternalDriveMounted: Bool {
+        let volume = try? externalRoot.resourceValues(forKeys: [.volumeURLKey]).volume
+        return volume?.standardizedFileURL.path == externalVolume.path
+    }
 
     static let shared = AppsVM()
 

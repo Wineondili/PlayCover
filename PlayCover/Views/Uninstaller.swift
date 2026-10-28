@@ -189,6 +189,12 @@ class Uninstaller {
     }
 
     static func pruneFiles() {
+        // Without the external drive the app list is empty and every app's data would look dangling
+        guard AppsVM.isExternalDriveMounted else {
+            Log.shared.error("External drive is not mounted, skipping prune")
+            return
+        }
+
         do {
             let bundleIds = AppsVM.shared.apps.map { $0.info.bundleIdentifier }
             let danglingItems = try PlayApp.bundleIDCache.filter { !bundleIds.contains($0) }

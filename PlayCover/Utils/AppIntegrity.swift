@@ -33,11 +33,9 @@ class AppIntegrity: ObservableObject {
 
     private static var expectedUrl = URL(fileURLWithPath: "/Applications/PlayCover.app")
 
+    // Location check disabled: PlayCover.app may live anywhere (e.g. on an external drive)
     private static var insideAppsFolder: Bool {
-        if let url = appUrl {
-            return url.path.contains("Xcode") || url.path.contains(expectedUrl.path)
-        }
-        return false
+        true
     }
 
 }
