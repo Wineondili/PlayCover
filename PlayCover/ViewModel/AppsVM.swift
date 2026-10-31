@@ -36,6 +36,20 @@ class AppsVM: ObservableObject {
             at: appDirectory,
             withIntermediateDirectories: true
         )
+        linkLegacyAppDirectory()
+    }
+
+    // Tools like MAA open apps from the stock location, so point it at appDirectory
+    private static func linkLegacyAppDirectory() {
+        let legacy = PlayTools.playCoverContainer.appendingPathComponent("Applications")
+        let fileManager = FileManager.default
+        if (try? fileManager.destinationOfSymbolicLink(atPath: legacy.path)) != nil { return }
+        // Only replace a leftover empty folder, never one that still holds apps
+        if let contents = try? fileManager.contentsOfDirectory(atPath: legacy.path) {
+            guard contents.allSatisfy({ $0.hasPrefix(".") }) else { return }
+            try? fileManager.removeItem(at: legacy)
+        }
+        try? fileManager.createSymbolicLink(at: legacy, withDestinationURL: appDirectory)
     }
 
     @Published var filteredApps: [PlayApp] = []
